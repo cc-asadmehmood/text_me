@@ -1,22 +1,30 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "@hotwired/turbo-rails"
 import "controllers"
+// import "@rails/ujs";
+// Rails.start();
+
+// Update Rails UJS import to use the local version
+// import * as Rails from "../assets/javascripts/jquery_ujs";
+// Rails.start();
 
 // Removed redundant jQuery import as it is included via the CDN in the layout file
 
 // Attach jQuery to the global window object
 window.$ = window.jQuery = $;
 
-// Ensure Semantic UI dropdowns are initialized after Turbo loads
+// Add error handling and ensure proper reinitialization of Semantic UI dropdowns
 document.addEventListener("turbo:load", () => {
-  console.log("jQuery version:", typeof jQuery !== "undefined" ? jQuery.fn.jquery : "jQuery not loaded");
-  console.log("Semantic UI dropdown available:", typeof $.fn.dropdown !== "undefined");
-
-  if (typeof $ !== "undefined" && typeof $.fn.dropdown !== "undefined") {
+  if (typeof $ !== "undefined" && $.fn.dropdown) {
+    console.log("Initializing Semantic UI dropdowns...");
     $('.ui.dropdown').dropdown();
+    $('.message .close').on('click', function() {
+      $(this).closest('.message').transition('fade');
+    });
   } else {
-    console.error("jQuery or Semantic UI dropdown is not loaded properly.");
+    console.error("jQuery or Semantic UI is not loaded. Ensure jQuery is included before Semantic UI.");
   }
 });
 
 
+import "./channels"
